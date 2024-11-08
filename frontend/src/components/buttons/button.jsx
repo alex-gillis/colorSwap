@@ -14,8 +14,8 @@ export function Button({ color, setColor }) {
 
   return (
     <div id="button-grp">
-      <button onClick={randomColor}>CLICK ME</button>
-      <p>Hex Code: {color}</p>
+      <button id="button-btn" onClick={randomColor}>CLICK ME</button>
+      <p id="button-txt">Hex Code: {color}</p>
     </div>
   );
 }
