@@ -3,15 +3,29 @@ import { Button } from './components/buttons/button';
 import './App.css';
 
 function App() {
-  const [myColor, setColor] = useState('Teal');
+  const [myColor, setColor] = useState('');
+  const baseUrl  = 'http://localhost:8080';
+ 
+  useEffect(() => { 
+    async function getColor() {
+    try {
+        const response = await fetch(`${baseUrl}/get-color`);
+        const data = await response.json();
+        
+        document.getElementById('result').innerText = setColor(data.string) || getColor;
+    } catch (error) {
+        console.error('Error retrieving color:', error);
+        randomColor
 
-  useEffect(() => {
+    }
+  }
+
     function randomColor() {
       let newColor = `#${Math.floor((Math.random() * 0xFFFFFF)).toString(16).padStart(6, '0')}`;
       setColor(newColor);
     }
 
-    randomColor(); // Set initial random color
+    getColor();
   }, []);
 
   return (
@@ -22,8 +36,7 @@ function App() {
         }}
         id='color-grp'
       >
-        {/* Pass setColor down as a prop to Button */}
-        <Button color={myColor} setColor={setColor} />
+        <Button color={myColor} setColor={setColor} baseUrl={baseUrl} />
       </div>
     </>
   );
