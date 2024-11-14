@@ -18,7 +18,7 @@ export function Button({ color, setColor, baseUrl }) {
         const result = await response.text();
         document.getElementById('result').innerText = result;
     } catch (error) {
-        console.error('Error storing string:', error);
+        console.error('Error storing color:', error);
     }
   }
 
