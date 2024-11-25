@@ -7,8 +7,8 @@ router.get('/get-color', (req, res) => {
         const color = getColor();
         res.send({ string: color });
     } catch (error) {
-        console.error(error); // Log the error for debugging
-        res.status(500).send({ error: 'Internal server error' }); // Structured error response
+        console.error(error); 
+        res.status(500).send({ error: 'Internal server error' }); 
     }
 });
 

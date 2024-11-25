@@ -1,6 +1,6 @@
 const request = require('supertest');
 const express = require('express');
-const getColorRoute = require('../../api/get-color/get-color'); // Corrected path
+const getColorRoute = require('../../api/get-color/get-color'); 
 const { getColor } = require('../../../colorStore');
 
 jest.mock('../../../colorStore', () => ({

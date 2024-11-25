@@ -14,7 +14,7 @@ router.post('/store', (req, res) => {
         setColor(string);
         res.send('Color stored successfully!');
     } catch (error) {
-        console.error(error); // Log the error for debugging
+        console.error(error); 
         res.status(500).send({ error: 'Internal server error' });
     }
 });
