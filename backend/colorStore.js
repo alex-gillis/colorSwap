@@ -1,6 +1,3 @@
-const { setColor } = require('../../../colorStore');
-const { getColor } = require('../../../colorStore');
-
 let storedColor = '';
 
 function getColor() {
