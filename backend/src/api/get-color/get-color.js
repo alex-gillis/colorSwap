@@ -1,15 +1,22 @@
-const express = require('express');
-const router = express.Router();
-const { getColor } = require('../../../colorStore');
+const Joi = require('joi');
+
+const responseSchema = Joi.object({
+    string: Joi.string().allow(''), 
+});
 
 router.get('/get-color', (req, res) => {
     try {
         const color = getColor();
-        res.send({ string: color });
-    } catch (error) {
-        console.error(error); 
-        res.status(500).send({ error: 'Internal server error' }); 
+        const response = { string: color || '' };
+
+        const { error } = responseSchema.validate(response);
+        if (error) {
+            throw new Error('Invalid response structure');
+        }
+
+        res.send(response);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send({ error: 'Internal server error' });
     }
 });
-
-module.exports = router;

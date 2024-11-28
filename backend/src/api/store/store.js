@@ -1,20 +1,27 @@
 const express = require('express');
+const Joi = require('joi');
 const router = express.Router();
 const { setColor } = require('../../../colorStore');
 
-router.post('/store', (req, res) => {
-    const { string } = req.body;
+const schema = Joi.object({
+    string: Joi.string().pattern(/^#[0-9A-Fa-f]{6}$/).required(), 
+});
 
-    // Validate input
-    if (!string || typeof string !== 'string' || !/^#[0-9A-Fa-f]{6}$/.test(string)) {
-        return res.status(400).send({ error: 'Color string is required and must be a valid hex color' });
+router.post('/store', (req, res) => {
+    const { error } = schema.validate(req.body); 
+
+    if (error) {
+        return res.status(400).send({
+            error: 'Invalid input',
+            details: error.details,
+        });
     }
 
     try {
-        setColor(string);
+        setColor(req.body.string);
         res.send('Color stored successfully!');
-    } catch (error) {
-        console.error(error); 
+    } catch (err) {
+        console.error(err);
         res.status(500).send({ error: 'Internal server error' });
     }
 });
