@@ -1,10 +1,10 @@
 const Joi = require('joi');
-require('dotenv').config(); // Load environment variables from .env
+require('dotenv').config(); 
 
 const schema = Joi.object({
-    PORT: Joi.number().default(3000),
+    PORT: Joi.number().default(8080),
     NODE_ENV: Joi.string().valid('development', 'production').default('development'),
-}).unknown(true); // Allow additional environment variables
+}).unknown(true); 
 
 const { error, value } = schema.validate(process.env);
 

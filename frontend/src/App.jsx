@@ -3,43 +3,49 @@ import { Button } from './components/buttons/button';
 import './App.css';
 
 function App() {
-  const [myColor, setColor] = useState('');
-  const baseUrl  = 'http://localhost:8080';
- 
-  useEffect(() => { 
-    async function getColor() {
-    try {
-        const response = await fetch(`${baseUrl}/get-color`);
-        const data = await response.json();
-        
-        document.getElementById('result').innerText = setColor(data.string) || getColor;
-    } catch (error) {
-        console.error('Error retrieving color:', error);
-        randomColor
+    const [myColor, setColor] = useState('');
+    const [error, setError] = useState(null); // State to manage errors
+    const baseUrl = 'http://localhost:8080';
 
-    }
-  }
+    useEffect(() => {
+        async function getColor() {
+            try {
+                const response = await fetch(`${baseUrl}/get-color/`, {
+                    method: 'GET',
+                    credentials: 'include', // Ensures cookies are sent
+                });
+                
 
-    function randomColor() {
-      let newColor = `#${Math.floor((Math.random() * 0xFFFFFF)).toString(16).padStart(6, '0')}`;
-      setColor(newColor);
-    }
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    setError(errorData.error || 'An error occurred.');
+                    return;
+                }
 
-    getColor();
-  }, []);
+                const data = await response.json();
+                setColor(data.string || '');
+                setError(null); // Clear any previous errors
+            } catch (error) {
+                console.error('Error retrieving color:', error);
+                setError('Unable to retrieve color. Please try again.');
+            }
+        }
 
-  return (
-    <>
-      <div 
-        style={{ 
-          backgroundColor: myColor 
-        }}
-        id='color-grp'
-      >
-        <Button color={myColor} setColor={setColor} baseUrl={baseUrl} />
-      </div>
-    </>
-  );
+        getColor();
+    }, []);
+
+    return (
+        <>
+            <div
+                style={{
+                    backgroundColor: myColor,
+                }}
+                id="color-grp"
+            >
+                <Button color={myColor} setColor={setColor} baseUrl={baseUrl} error={error} />
+            </div>
+        </>
+    );
 }
 
 export default App;

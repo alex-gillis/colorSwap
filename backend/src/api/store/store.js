@@ -1,28 +1,41 @@
 const express = require('express');
-const Joi = require('joi');
 const router = express.Router();
-const { setColor } = require('../../../colorStore');
-
-const schema = Joi.object({
-    string: Joi.string().pattern(/^#[0-9A-Fa-f]{6}$/).required(), 
-});
+const { setColor } = require('../../../colorStore'); // Assume this handles storage logic
 
 router.post('/store', (req, res) => {
-    const { error } = schema.validate(req.body); 
+    const { string: color } = req.body;
 
-    if (error) {
+    // Validate the input
+    const hexColorPattern = /^#[0-9A-Fa-f]{6}$/;
+    if (!color || !hexColorPattern.test(color)) {
         return res.status(400).send({
-            error: 'Invalid input',
-            details: error.details,
+            error: 'Invalid color format. Please provide a valid hex color code.',
         });
     }
 
+    // Check for active session
+    if (req.session && req.session.startTime) {
+        const elapsedTime = Date.now() - req.session.startTime;
+        const maxAge = req.session.cookie.maxAge;
+
+        if (elapsedTime < maxAge) {
+            return res.status(403).send({
+                error: `You can't get a new color for another ${(maxAge - elapsedTime) / 1000} seconds`,
+                remainingTime: (maxAge - elapsedTime) / 1000, // Remaining time in seconds
+            });
+        }
+    }
+
+    // Set the session and store the color
     try {
-        setColor(req.body.string);
+        req.session.startTime = Date.now(); // Set session start time
+        setColor(color); // Store the color using your storage logic
         res.send('Color stored successfully!');
-    } catch (err) {
-        console.error(err);
-        res.status(500).send({ error: 'Internal server error' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({
+            error: 'Failed to store the color. Please try again later.',
+        });
     }
 });
 
