@@ -4,8 +4,8 @@ import './App.css';
 
 function App() {
     const [myColor, setColor] = useState('');
-    const [error, setError] = useState(null); // State to manage errors
-    const baseUrl = 'http://localhost:8080';
+    const [error, setError] = useState(null);
+    const baseUrl = import.meta.env.VITE_API_URL; // Access .env variable
 
     useEffect(() => {
         async function getColor() {
@@ -32,7 +32,7 @@ function App() {
         }
 
         getColor();
-    }, []);
+    }, [baseUrl]);
 
     return (
         <>
