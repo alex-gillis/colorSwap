@@ -12,7 +12,7 @@ function App() {
             try {
                 const response = await fetch(`${baseUrl}/get-color/`, {
                     method: 'GET',
-                    credentials: 'include', // Ensures cookies are sent
+                    credentials: 'include', 
                 });
                 
 
