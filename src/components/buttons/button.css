@@ -1,0 +1,17 @@
+#button-grp {
+    text-align: center;
+    min-height: 50px;
+    min-width: 150px;
+    color: aliceblue;
+}
+
+#button-btn {
+    margin-top: 12px;
+    background-color: aliceblue;
+}
+
+#button-txt {
+    margin-bottom: 12px;
+    background-color: black;
+    padding: 4px;
+}
